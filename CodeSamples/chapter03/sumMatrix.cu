@@ -92,10 +92,10 @@ int main(int argc, char **argv)
     gpuRef = (float *)malloc(nBytes);
 
     // initialize data at host side
-    size_t iStart = seconds();
+    double iStart = seconds();
     initialData(h_A, nxy);
     initialData(h_B, nxy);
-    size_t iElaps = seconds() - iStart;
+    double iElaps = seconds() - iStart;
 
     memset(hostRef, 0, nBytes);
     memset(gpuRef, 0, nBytes);
@@ -134,9 +134,9 @@ int main(int argc, char **argv)
     sumMatrixOnGPU2D<<<grid, block>>>(d_MatA, d_MatB, d_MatC, nx, ny);
     CHECK(cudaDeviceSynchronize());
     iElaps = seconds() - iStart;
-    printf("sumMatrixOnGPU2D <<<(%d,%d), (%d,%d)>>> elapsed %d ms\n", grid.x,
+    printf("sumMatrixOnGPU2D <<<(%d,%d), (%d,%d)>>> elapsed %f ms\n", grid.x,
            grid.y,
-           block.x, block.y, iElaps);
+           block.x, block.y, iElaps*1000);
     CHECK(cudaGetLastError());
 
     // copy kernel result back to host side
