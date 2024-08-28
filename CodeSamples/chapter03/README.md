@@ -86,3 +86,95 @@ sumMatrixOnGPU2D <<<(256,8192), (64,2)>>> elapsed 166.579008 ms
     sm__warps_active.avg.pct_of_peak_sustained_active                                    %                          93.26
     ---------------------------------------------------------------------- --------------- ------------------------------
 ```
+
+#### `inst_per_warp` -> `smsp__average_inst_executed_per_warp.ratio`
+
+用inst_per_warp指标来查看每个线程束上执行指令数量的平均值。
+
+nvprof
+
+```
+$ nvprof --metrics inst_per_warp ./reduceInteger
+```
+
+ncu
+
+```
+$ sudo /usr/local/NVIDIA-Nsight-Compute/ncu --metrics smsp__average_inst_executed_per_warp.ratio ./reduceInteger
+==PROF== Connected to process 1900 (/home/hexu/git/Professional.CUDA.C.Programming/CodeSamples/chapter03/reduceInteger)
+/home/hexu/git/Professional.CUDA.C.Programming/CodeSamples/chapter03/./reduceInteger starting reduction at device 0: NVIDIA GeForce RTX 2060     with array size 16777216  grid 32768 block 512
+cpu reduce      elapsed 0.033248 sec cpu_sum: 2139353471
+==PROF== Profiling "reduceNeighbored" - 1: 0%....50%....100% - 1 pass
+gpu Neighbored  elapsed 0.129067 sec gpu_sum: 2139353471 <<<grid 32768 block 512>>>
+==PROF== Profiling "reduceNeighboredLess" - 2: 0%....50%....100% - 1 pass
+gpu Neighbored2 elapsed 0.019528 sec gpu_sum: 2139353471 <<<grid 32768 block 512>>>
+==PROF== Profiling "reduceInterleaved" - 3: 0%....50%....100% - 1 pass
+gpu Interleaved elapsed 0.021165 sec gpu_sum: 2139353471 <<<grid 32768 block 512>>>
+==PROF== Profiling "reduceUnrolling2" - 4: 0%....50%....100% - 1 pass
+gpu Unrolling2  elapsed 0.016253 sec gpu_sum: 2139353471 <<<grid 16384 block 512>>>
+==PROF== Profiling "reduceUnrolling4" - 5: 0%....50%....100% - 1 pass
+gpu Unrolling4  elapsed 0.016773 sec gpu_sum: 2139353471 <<<grid 8192 block 512>>>
+==PROF== Profiling "reduceUnrolling8" - 6: 0%....50%....100% - 1 pass
+gpu Unrolling8  elapsed 0.012840 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Profiling "reduceUnrollWarps8" - 7: 0%....50%....100% - 1 pass
+gpu UnrollWarp8 elapsed 0.012494 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Profiling "reduceCompleteUnrollWarps8" - 8: 0%....50%....100% - 1 pass
+gpu Cmptnroll8  elapsed 0.018790 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Profiling "reduceCompleteUnroll" - 9: 0%....50%....100% - 1 pass
+gpu Cmptnroll   elapsed 0.016863 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Disconnected from process 1900
+[1900] reduceInteger@127.0.0.1
+  reduceNeighbored(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         786.19
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceNeighboredLess(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         326.75
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceInterleaved(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         306.25
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrolling2(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         342.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrolling4(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         390.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrolling8(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         462.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrollWarps8(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         365.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceCompleteUnrollWarps8(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         328.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  void reduceCompleteUnroll<512u>(int*, int*, unsigned int), 2024-Aug-27 17:26:39, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         314.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+```
