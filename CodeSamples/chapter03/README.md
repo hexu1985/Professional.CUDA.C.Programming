@@ -6,6 +6,67 @@
                   Refer https://developer.nvidia.com/tools-overview for more details.
 ```
 
+#### `branch_efficiency` -> `smsp__sass_average_branch_targets_threads_uniform.pct`
+
+用branch_efficiency指标检查内核的线程分化影响
+
+nvprof
+
+```
+$ nvprof --metrics branch_efficiency ./simpleDivergence
+```
+
+ncu
+
+```
+$ sudo /usr/local/NVIDIA-Nsight-Compute/ncu --metrics smsp__sass_average_branch_targets_threads_uniform.pct ./simpleDivergence
+==PROF== Connected to process 20936 (/home/hexu/git/Professional.CUDA.C.Programming/CodeSamples/chapter03/simpleDivergence)
+/home/hexu/git/Professional.CUDA.C.Programming/CodeSamples/chapter03/./simpleDivergence using Device 0: NVIDIA GeForce RTX 2060
+Data size 64 Execution Configure (block 64 grid 1)
+==PROF== Profiling "warmingup(float*)" - 1: 0%....50%....100% - 1 pass
+warmup      <<<    1   64 >>> elapsed 0.119083 sec
+==PROF== Profiling "mathKernel1(float*)" - 2: 0%....50%....100% - 1 pass
+mathKernel1 <<<    1   64 >>> elapsed 0.008643 sec
+==PROF== Profiling "mathKernel2(float*)" - 3: 0%....50%....100% - 1 pass
+mathKernel2 <<<    1   64 >>> elapsed 0.007262 sec
+==PROF== Profiling "mathKernel3(float*)" - 4: 0%....50%....100% - 1 pass
+mathKernel3 <<<    1   64 >>> elapsed 0.007343 sec
+==PROF== Profiling "mathKernel4(float*)" - 5: 0%....50%....100% - 1 pass
+mathKernel4 <<<    1   64 >>> elapsed 0.006955 sec
+==PROF== Disconnected from process 20936
+[20936] simpleDivergence@127.0.0.1
+  warmingup(float*), 2024-Aug-28 11:14:50, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__sass_average_branch_targets_threads_uniform.pct                                %                            100
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  mathKernel1(float*), 2024-Aug-28 11:14:50, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__sass_average_branch_targets_threads_uniform.pct                                %                             80
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  mathKernel2(float*), 2024-Aug-28 11:14:50, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__sass_average_branch_targets_threads_uniform.pct                                %                            100
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  mathKernel3(float*), 2024-Aug-28 11:14:50, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__sass_average_branch_targets_threads_uniform.pct                                %                          71.43
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  mathKernel4(float*), 2024-Aug-28 11:14:50, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    smsp__sass_average_branch_targets_threads_uniform.pct                                %                            100
+    ---------------------------------------------------------------------- --------------- ------------------------------
+$
+```
+
 
 #### `gld_throughput` -> `l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum.per_second`
 
@@ -31,6 +92,7 @@ sumMatrixOnGPU2D <<<(512,512), (32,32)>>> elapsed 189.383030 ms
     ---------------------------------------------------------------------- --------------- ------------------------------
     l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum.per_second                   Gbyte/second                          64.43
     ---------------------------------------------------------------------- --------------- ------------------------------
+$
 ```
 
 #### `gld_efficiency` -> `smsp__sass_average_data_bytes_per_sector_mem_global_op_ld.pct`
@@ -58,6 +120,7 @@ sumMatrixOnGPU2D <<<(512,512), (32,32)>>> elapsed 286.754847 ms
     ---------------------------------------------------------------------- --------------- ------------------------------
     smsp__sass_average_data_bytes_per_sector_mem_global_op_ld.pct                        %                            100
     ---------------------------------------------------------------------- --------------- ------------------------------
+$
 ```
 
 
@@ -85,6 +148,7 @@ sumMatrixOnGPU2D <<<(256,8192), (64,2)>>> elapsed 166.579008 ms
     ---------------------------------------------------------------------- --------------- ------------------------------
     sm__warps_active.avg.pct_of_peak_sustained_active                                    %                          93.26
     ---------------------------------------------------------------------- --------------- ------------------------------
+$
 ```
 
 #### `inst_per_warp` -> `smsp__average_inst_executed_per_warp.ratio`
@@ -177,4 +241,5 @@ gpu Cmptnroll   elapsed 0.016863 sec gpu_sum: 2139353471 <<<grid 4096 block 512>
     ---------------------------------------------------------------------- --------------- ------------------------------
     smsp__average_inst_executed_per_warp.ratio                                   inst/warp                         314.38
     ---------------------------------------------------------------------- --------------- ------------------------------
+$
 ```
