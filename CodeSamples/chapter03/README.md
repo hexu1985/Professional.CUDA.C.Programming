@@ -243,3 +243,96 @@ gpu Cmptnroll   elapsed 0.016863 sec gpu_sum: 2139353471 <<<grid 4096 block 512>
     ---------------------------------------------------------------------- --------------- ------------------------------
 $
 ```
+
+
+#### `dram_read_throughput` -> `dram__bytes_read.sum.per_second`
+
+dram_read_throughput表示设备内存读取吞吐量指标
+
+nvprof
+
+```
+$ nvprof --metrics dram_read_throughput ./reduceInteger
+```
+
+ncu
+
+```
+$ sudo /usr/local/NVIDIA-Nsight-Compute/ncu --metrics dram__bytes_read.sum.per_second ./reduceInteger
+==PROF== Connected to process 27454 (/home/hexu/git/Professional.CUDA.C.Programming/CodeSamples/chapter03/reduceInteger)
+/home/hexu/git/Professional.CUDA.C.Programming/CodeSamples/chapter03/./reduceInteger starting reduction at device 0: NVIDIA GeForce RTX 2060     with array size 16777216  grid 32768 block 512
+cpu reduce      elapsed 0.032732 sec cpu_sum: 2139353471
+==PROF== Profiling "reduceNeighbored" - 1: 0%....50%....100% - 1 pass
+gpu Neighbored  elapsed 0.126561 sec gpu_sum: 2139353471 <<<grid 32768 block 512>>>
+==PROF== Profiling "reduceNeighboredLess" - 2: 0%....50%....100% - 1 pass
+gpu Neighbored2 elapsed 0.019401 sec gpu_sum: 2139353471 <<<grid 32768 block 512>>>
+==PROF== Profiling "reduceInterleaved" - 3: 0%....50%....100% - 1 pass
+gpu Interleaved elapsed 0.015214 sec gpu_sum: 2139353471 <<<grid 32768 block 512>>>
+==PROF== Profiling "reduceUnrolling2" - 4: 0%....50%....100% - 1 pass
+gpu Unrolling2  elapsed 0.014083 sec gpu_sum: 2139353471 <<<grid 16384 block 512>>>
+==PROF== Profiling "reduceUnrolling4" - 5: 0%....50%....100% - 1 pass
+gpu Unrolling4  elapsed 0.009558 sec gpu_sum: 2139353471 <<<grid 8192 block 512>>>
+==PROF== Profiling "reduceUnrolling8" - 6: 0%....50%....100% - 1 pass
+gpu Unrolling8  elapsed 0.010215 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Profiling "reduceUnrollWarps8" - 7: 0%....50%....100% - 1 pass
+gpu UnrollWarp8 elapsed 0.016290 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Profiling "reduceCompleteUnrollWarps8" - 8: 0%....50%....100% - 1 pass
+gpu Cmptnroll8  elapsed 0.014875 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Profiling "reduceCompleteUnroll" - 9: 0%....50%....100% - 1 pass
+gpu Cmptnroll   elapsed 0.014720 sec gpu_sum: 2139353471 <<<grid 4096 block 512>>>
+==PROF== Disconnected from process 27454
+[27454] reduceInteger@127.0.0.1
+  reduceNeighbored(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                           9.11
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceNeighboredLess(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          11.56
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceInterleaved(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          13.07
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrolling2(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          22.24
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrolling4(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          36.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrolling8(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          58.92
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceUnrollWarps8(int*, int*, unsigned int), 2024-Aug-28 16:57:20, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          57.87
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  reduceCompleteUnrollWarps8(int*, int*, unsigned int), 2024-Aug-28 16:57:21, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          61.79
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+  void reduceCompleteUnroll<512u>(int*, int*, unsigned int), 2024-Aug-28 16:57:21, Context 1, Stream 7
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    dram__bytes_read.sum.per_second                                           Gbyte/second                          60.40
+    ---------------------------------------------------------------------- --------------- ------------------------------
+```
