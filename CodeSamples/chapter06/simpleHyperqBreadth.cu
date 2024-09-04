@@ -12,7 +12,7 @@
  * visualize in the Visual Profiler.
  */
 
-#define N 300000
+#define N 30000
 #define NSTREAM 4
 
 __global__ void kernel_1()
